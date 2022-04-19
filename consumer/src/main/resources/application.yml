@@ -1,0 +1,29 @@
+server:
+  port: 8020
+spring:
+  application:
+    name: mq-consumer
+  cloud:
+    stream:
+      bindings:
+        backtracking-in-0:
+          content-type: application/json
+          destination: test-topic3
+          group: backtracking-consumer-group
+        transaction-in-0:
+          content-type: application/json
+          destination: TransactionTopic
+          group: transaction-consumer-group
+      function:
+        definition: backtracking;transaction
+      rocketmq:
+        binder:
+          name-server: 192.168.101.44:9876;192.168.101.45:9876
+        bindings:
+          backtracking-in-0: # 回溯消息配置
+            # com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQConsumerProperties
+            consumer:
+              consumeFromWhere: CONSUME_FROM_TIMESTAMP
+              consumeTimestamp: 20220117110148
+              enabled: true # 是否开启消费，默认为 true
+              broadcasting: false # 是否使用广播消费，默认为 false 使用集群消费
